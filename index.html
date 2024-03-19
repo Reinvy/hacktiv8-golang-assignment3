@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="15">
+    <title>Status Monitor</title>
+    <script>
+        function getStatus() {
+            fetch('status.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('water').textContent = data.water + ' meter';
+                    document.getElementById('wind').textContent = data.wind + ' m/s';
+                    document.getElementById('water-status').textContent = determineStatus(data.water, 'water');
+                    document.getElementById('wind-status').textContent = determineStatus(data.wind, 'wind');
+                });
+        }
+
+        function determineStatus(value, type) {
+            if (type === 'water') {
+                if (value < 5) return 'Aman';
+                if (value >= 6 && value <= 8) return 'Siaga';
+                if (value > 8) return 'Bahaya';
+            } else if (type === 'wind') {
+                if (value < 6) return 'Aman';
+                if (value >= 7 && value <= 15) return 'Siaga';
+                if (value > 15) return 'Bahaya';
+            }
+        }
+
+        setInterval(getStatus, 15000);
+        window.onload = getStatus;
+    </script>
+</head>
+
+<body>
+    <h1>Status Air dan Angin</h1>
+    <p>Water Level: <span id="water"></span> (<span id="water-status"></span>)</p>
+    <p>Wind Speed: <span id="wind"></span> (<span id="wind-status"></span>)</p>
+</body>
+
+</html>
